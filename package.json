@@ -1,0 +1,10 @@
+{
+  "name": "konekt-dogether-teams-showcase",
+  "version": "0.1.0",
+  "main": "index.js",
+  "repository": "https://github.com/danielperr/dogether-teams-showcase.git",
+  "author": "danielperr <daniel.perez079@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "workspaces": ["packages/*"]
+}
