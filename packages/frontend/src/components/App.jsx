@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
 import { ThemeProvider, createUseStyles } from 'react-jss';
 
@@ -40,6 +40,9 @@ const useStyles = createUseStyles({
 
 function App() {
   const [teamGroups, setTeamGroups] = useState([]);
+  const [totalWidth, setTotalWidth] = useState(document.body.scrollWidth);
+
+  const containerRef = useRef(null);
 
   const fetchAndUpdateTeamGroups = () => {
     fetchTeamGroups()
@@ -63,7 +66,14 @@ function App() {
     fetchAndUpdateTeamGroups();
     const interval = setInterval(fetchAndUpdateTeamGroups, 1000 * 60 * 60);
     return () => { clearInterval(interval); };
-  }, [])
+  }, []);
+
+  useEffect(() => {
+    if (containerRef.current) {
+      setTotalWidth(containerRef.current.scrollWidth);
+      console.log(containerRef.current.scrollWidth);
+    }
+  }, [teamGroups]);
 
   const classes = useStyles();
 
@@ -72,16 +82,17 @@ function App() {
       {Boolean(teamGroups.length) && (
         <div
           style={{
-            width: `${document.body.scrollWidth}px`,
+            width: `${totalWidth}px`,
             height: '100%',
             display: 'grid',
             gridTemplateRows: 'minmax(80px, 1fr) 4fr 66px',
             gridTemplateColumns: `repeat(${teamGroups.length}, 1fr)`,
             animationName: 'horizontal-motion',
-            animationDuration: `${document.body.scrollWidth / ANIMATION_PIXELS_PER_SECOND}s`,
+            animationDuration: `${totalWidth / ANIMATION_PIXELS_PER_SECOND}s`,
             animationTimingFunction: 'linear',
             animationIterationCount: 'infinite',
           }}
+          ref={containerRef}
         >
           {teamGroups.map(({ title }) => (
             <div key={`${title}-Title`}>
